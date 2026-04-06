@@ -71,3 +71,6 @@ replace = 'version = "{new_version}"'
 
 [[tool.bumpversion.files]]
 filename = "django_cognito_m2m/__init__.py"
+
+[tool.uv.workspace]
+members = []
