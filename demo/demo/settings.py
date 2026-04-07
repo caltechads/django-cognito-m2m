@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-f^bd0hzl91f=xkvt(=+)lsasd&ljgqp(egaf0@(oevyswc-7iu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: list[str] = []
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "demo.core",
     "book_manager",
     "rest_framework",
 ]
