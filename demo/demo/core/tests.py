@@ -4,14 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from book_manager.models import Author, Binding, Book, BookAuthor, Publisher
 from django.contrib.auth import get_user_model
 from django.test import override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-
-from book_manager.models import Author, Binding, Book, BookAuthor, Publisher
-
 
 User = get_user_model()
 
@@ -57,19 +55,19 @@ class DemoFakeValidator:
         if token == "valid-token":
             return FakeValidatedToken(
                 client_id="service-client",
-                scopes=frozenset({"catalog/read", "catalog/write"}),
+                scopes=frozenset({"cognito_m2m_demo/write", "cognito_m2m_demo/read"}),
                 claims={"sub": "service-client"},
             )
         if token == "read-token":
             return FakeValidatedToken(
                 client_id="service-client",
-                scopes=frozenset({"catalog/read"}),
+                scopes=frozenset({"cognito_m2m_demo/read"}),
                 claims={"sub": "service-client"},
             )
         if token == "write-token":
             return FakeValidatedToken(
                 client_id="service-client",
-                scopes=frozenset({"catalog/write"}),
+                scopes=frozenset({"cognito_m2m_demo/write"}),
                 claims={"sub": "service-client"},
             )
         raise ValueError("Token signature was invalid.")
@@ -194,7 +192,7 @@ class AuthorAPITests(AuthenticatedAPITestCase):
         self.assert_machine_principal(
             response,
             client_id="service-client",
-            scopes=frozenset({"catalog/read"}),
+            scopes=frozenset({"cognito_m2m_demo/read"}),
         )
 
     def test_retrieve_author(self) -> None:
@@ -381,7 +379,7 @@ class BookAPITests(AuthenticatedAPITestCase):
         self.assert_machine_principal(
             response,
             client_id="service-client",
-            scopes=frozenset({"catalog/read"}),
+            scopes=frozenset({"cognito_m2m_demo/read"}),
         )
 
     def test_retrieve_book_includes_ordered_authors(self) -> None:

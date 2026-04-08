@@ -17,11 +17,11 @@ Set these environment variables before calling the protected API with a real Cog
 export COGNITO_M2M_REGION=us-west-2
 export COGNITO_M2M_USER_POOL_ID=us-west-2_AbCdEfGhI
 export COGNITO_M2M_AUDIENCE=your-api-audience
-export COGNITO_M2M_TRACK_CLIENT_ACTIVITY=1
+export COGNITO_M2M_TRACK_CLIENT_ACTIVITY=true
 ```
 
 `COGNITO_M2M_AUDIENCE` is optional. Leave it unset if your validator configuration does not require an audience check.
-`COGNITO_M2M_TRACK_CLIENT_ACTIVITY` is optional. Set it to `1` if you want the demo to record `client_id`, `first_seen_at`, and `last_seen_at` for authenticated clients.
+`COGNITO_M2M_TRACK_CLIENT_ACTIVITY` is optional. Set it to `true` if you want the demo to record `client_id`, `first_seen_at`, and `last_seen_at` for authenticated clients.
 
 If you enable client activity tracking, make sure the project includes `"django_cognito_m2m"` in `INSTALLED_APPS` and run:
 
@@ -33,8 +33,8 @@ If you enable client activity tracking, make sure the project includes `"django_
 
 The demo uses a split read/write scope model across both resources:
 
-- `catalog/read`: required for `GET`, `HEAD`, and `OPTIONS`
-- `catalog/write`: required for `POST`, `PUT`, `PATCH`, and `DELETE`
+- `cognito_m2m_demo/read`: required for `GET`, `HEAD`, and `OPTIONS`
+- `cognito_m2m_demo/write`: required for `POST`, `PUT`, `PATCH`, and `DELETE`
 
 Successful authenticated requests expose:
 
@@ -64,7 +64,7 @@ curl \
   http://127.0.0.1:8000/api/authors/
 ```
 
-Create a book with a token that has `catalog/write`:
+Create a book with a token that has `cognito_m2m_demo/write`:
 
 ```bash
 curl \
@@ -88,4 +88,4 @@ The smoke test now expects an auth token for every run:
   --cleanup
 ```
 
-Use a token with both `catalog/read` and `catalog/write` if you want the full create, fetch, update, and delete scenario to succeed.
+Use a token with both `cognito_m2m_demo/read` and `cognito_m2m_demo/write` if you want the full create, fetch, update, and delete scenario to succeed.
