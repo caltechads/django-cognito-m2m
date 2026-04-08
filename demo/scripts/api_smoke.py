@@ -1,7 +1,7 @@
-"""Exercise the demo DRF author/book endpoints end to end.
+"""Exercise the authenticated demo DRF author/book endpoints end to end.
 
 This script talks to a locally running Django server and performs a small
-author/book lifecycle against the open `/api/` endpoints. It is intentionally
+author/book lifecycle against the protected `/api/` endpoints. It is intentionally
 lightweight and uses only the Python standard library so it is easy to rerun in
 the demo environment.
 """
@@ -41,19 +41,19 @@ class ApiResponse:
 class ApiClient:
     """Make JSON requests against the demo API.
 
-    The client centralizes header handling so authentication can be added later
-    without changing the scenario steps.
+    The client centralizes header handling so every request consistently sends
+    the required bearer token.
 
     Args:
         base_url: Base URL for the Django server.
-        auth_token: Optional bearer token placeholder for future auth support.
+        auth_token: Bearer token sent on every request.
         timeout: Timeout in seconds for each request.
     """
 
     #: Base URL used to construct endpoint URLs.
     base_url: str
-    #: Optional bearer token used when authentication is introduced later.
-    auth_token: str | None
+    #: Bearer token sent on each request.
+    auth_token: str
     #: Timeout in seconds applied to outgoing requests.
     timeout: float
 
@@ -61,14 +61,14 @@ class ApiClient:
         self,
         *,
         base_url: str,
-        auth_token: str | None = None,
+        auth_token: str,
         timeout: float = 10.0,
     ) -> None:
         """Initialize a JSON API client.
 
         Keyword Args:
             base_url: Base URL for the Django server.
-            auth_token: Optional bearer token placeholder.
+            auth_token: Bearer token sent on each request.
             timeout: Timeout in seconds for each request.
         """
 
@@ -180,16 +180,14 @@ class ApiClient:
         """Build request headers for API calls.
 
         Returns:
-            Base JSON headers, plus an authorization header when configured.
+            Base JSON headers plus the required bearer token.
         """
 
-        headers = {
+        return {
             "Accept": "application/json",
             "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.auth_token}",
         }
-        if self.auth_token:
-            headers["Authorization"] = f"Bearer {self.auth_token}"
-        return headers
 
     @staticmethod
     def _decode_response(body: bytes) -> Any:
@@ -459,8 +457,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--auth-token",
-        default=None,
-        help="Optional bearer token placeholder for future authenticated runs.",
+        required=True,
+        help="Bearer token used for every API request.",
     )
     parser.add_argument(
         "--timeout",

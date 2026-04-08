@@ -10,9 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+#: Base directory for the demo project.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -25,11 +26,13 @@ SECRET_KEY = "django-insecure-f^bd0hzl91f=xkvt(=+)lsasd&ljgqp(egaf0@(oevyswc-7iu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+#: Allowed hostnames for the Django server.
 ALLOWED_HOSTS: list[str] = []
 
 
 # Application definition
 
+#: Installed Django applications.
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -42,6 +45,7 @@ INSTALLED_APPS = [
     "rest_framework",
 ]
 
+#: Middleware stack for incoming requests.
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -52,8 +56,10 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+#: Root URL configuration module.
 ROOT_URLCONF = "demo.urls"
 
+#: Template backend configuration.
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -69,12 +75,14 @@ TEMPLATES = [
     },
 ]
 
+#: WSGI application entry point.
 WSGI_APPLICATION = "demo.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+#: Database configuration for the demo project.
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -86,6 +94,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
+#: Password validation backends.
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -105,16 +114,29 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
+#: Default language code.
 LANGUAGE_CODE = "en-us"
 
+#: Default application time zone.
 TIME_ZONE = "UTC"
 
+#: Enable Django internationalization support.
 USE_I18N = True
 
+#: Store datetimes as timezone-aware values.
 USE_TZ = True
+
+#: Cognito machine-to-machine authentication settings for the demo API.
+COGNITO_M2M = {
+    "REGION": os.environ.get("COGNITO_M2M_REGION"),
+    "USER_POOL_ID": os.environ.get("COGNITO_M2M_USER_POOL_ID"),
+    "AUDIENCE": os.environ.get("COGNITO_M2M_AUDIENCE") or None,
+}
+print(COGNITO_M2M)
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+#: Base URL for static assets.
 STATIC_URL = "static/"
