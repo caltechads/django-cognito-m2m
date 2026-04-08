@@ -7,6 +7,8 @@ from typing import Any
 from django_cognito_m2m.conf import CognitoM2MSettings, cognito_m2m_settings
 from django_cognito_m2m.exceptions import MalformedAuthorizationHeader
 from django_cognito_m2m.principal import ServicePrincipal
+from django_cognito_m2m.tracker import track_service_client_activity
+from django_cognito_m2m.utils import get_service_principal
 from django_cognito_m2m.validator_adapter import ValidatorAdapter
 
 
@@ -54,7 +56,13 @@ class CognitoRequestAuthenticator:
 
     def authenticate_request(self, request: Any) -> ServicePrincipal | None:
         """Authenticate a request and return a principal if a bearer token was sent."""
+        attached_principal = get_service_principal(request, settings_obj=self.settings)
+        if attached_principal is not None:
+            return attached_principal
+
         token = self.extract_bearer_token(request)
         if token is None:
             return None
-        return self.authenticate_token(token)
+        principal = self.authenticate_token(token)
+        track_service_client_activity(principal, settings_obj=self.settings)
+        return principal

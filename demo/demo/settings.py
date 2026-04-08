@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_cognito_m2m",
     "demo.core",
     "book_manager",
     "rest_framework",
@@ -131,6 +132,8 @@ COGNITO_M2M = {
     "REGION": os.environ.get("COGNITO_M2M_REGION"),
     "USER_POOL_ID": os.environ.get("COGNITO_M2M_USER_POOL_ID"),
     "AUDIENCE": os.environ.get("COGNITO_M2M_AUDIENCE") or None,
+    "TRACK_CLIENT_ACTIVITY": os.environ.get("COGNITO_M2M_TRACK_CLIENT_ACTIVITY")
+    == "true",
 }
 print(COGNITO_M2M)
 

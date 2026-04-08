@@ -55,7 +55,16 @@ packages = ["django_cognito_m2m"]
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
-testpaths = ["tests"]
+testpaths = ["django_cognito_m2m/tests"]
+addopts = [
+    "--reuse-db",
+    "--nomigrations",
+    "--strict-markers",
+    "--cov=django_cognito_m2m",
+    "--cov-report=html:reports/coverage",
+    "--cov-report=term-missing",
+    "--cov-branch"
+]
 
 [tool.bumpversion]
 current_version = "0.1.1"
@@ -72,5 +81,28 @@ replace = 'version = "{new_version}"'
 [[tool.bumpversion.files]]
 filename = "django_cognito_m2m/__init__.py"
 
+[tool.uv]
+default-groups = ["docs", "test"]
+
 [tool.uv.workspace]
 members = []
+
+[dependency-groups]
+docs = [
+  "sphinx<7",
+  "sphinx_rtd_theme == 2.0.0",
+  "sphinxcontrib-images >= 0.9.4",
+  "autodoc_pydantic >= 2.0.0",
+  "diagrams >= 0.23.3",
+  "setuptools>=75.1.0",
+]
+test = [
+  "pytest>=8.0",
+  "pytest-django>=4.8",
+  "djangorestframework>=3.15",
+  "pytest-cov >= 4.1.0",
+  "pytest-mock >= 3.10.0",
+  "pytest-xdist >= 3.4.0",
+  "pytest-benchmark >= 3.4.1",
+]
+

@@ -7,18 +7,30 @@ from typing import Any
 from django_cognito_m2m.conf import CognitoM2MSettings, cognito_m2m_settings
 from django_cognito_m2m.principal import ServicePrincipal
 
+_MISSING = object()
+
 
 def get_underlying_request(request: Any) -> Any:
     """Return the underlying Django request when wrapped by DRF."""
     return getattr(request, "_request", request)
 
 
+def _get_instance_attr(request: Any, attr: str) -> Any:
+    values = getattr(request, "__dict__", None)
+    if isinstance(values, dict) and attr in values:
+        return values[attr]
+    return _MISSING
+
+
 def _get_request_attr(request: Any, attr: str) -> Any:
-    if hasattr(request, attr):
-        return getattr(request, attr)
+    value = _get_instance_attr(request, attr)
+    if value is not _MISSING:
+        return value
     underlying = get_underlying_request(request)
-    if underlying is not request and hasattr(underlying, attr):
-        return getattr(underlying, attr)
+    if underlying is not request:
+        value = _get_instance_attr(underlying, attr)
+        if value is not _MISSING:
+            return value
     return None
 
 

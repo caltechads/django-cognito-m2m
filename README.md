@@ -52,6 +52,19 @@ If you want DRF support, install the extra:
 pip install m2m-cognito 'django-cognito-m2m[drf]'
 ```
 
+If you enable built-in client activity tracking, also add the app to `INSTALLED_APPS` and run migrations:
+
+```python
+INSTALLED_APPS = [
+    # ...
+    "django_cognito_m2m",
+]
+```
+
+```bash
+python manage.py migrate
+```
+
 ## Supported Stack
 
 - Python 3.10+
@@ -89,6 +102,7 @@ COGNITO_M2M = {
     "USER_MAPPING_CLASS": None,
 
     "RETURN_USER_PROXY": False,
+    "TRACK_CLIENT_ACTIVITY": False,
     "FAIL_ON_INVALID_BEARER": True,
     "JSON_ERROR_RESPONSES": True,
 }
@@ -101,8 +115,29 @@ COGNITO_M2M = {
 - `VALIDATOR_KWARGS` lets you pass additional constructor kwargs to the validator.
 - `HEADER_NAME` and `HEADER_PREFIX` control bearer token extraction.
 - `ALLOWED_CLIENT_IDS` acts as a default allowlist for permission and mixin layers.
+- `TRACK_CLIENT_ACTIVITY` stores `client_id`, `first_seen_at`, and `last_seen_at` for authenticated machine clients.
 - `FAIL_ON_INVALID_BEARER` controls whether plain Django middleware returns 401 immediately for invalid Bearer tokens.
 - `JSON_ERROR_RESPONSES` controls whether plain Django errors return JSON or plain text.
+
+## Client Activity Tracking
+
+Enable built-in client activity tracking when you want a lightweight activity table for machine clients:
+
+```python
+COGNITO_M2M = {
+    "TRACK_CLIENT_ACTIVITY": True,
+}
+```
+
+When enabled:
+
+- `django_cognito_m2m` must be present in `INSTALLED_APPS`
+- `python manage.py migrate` must be run so the activity table exists
+- one row is stored per `client_id`
+- `first_seen_at` records the first authenticated request observed for that client
+- `last_seen_at` is updated on each authenticated request
+
+This feature is informational only. It does not store tokens, scopes, IP addresses, or request counters, and it should not be used as an authorization source of truth.
 
 ## Shared Principal Model
 
@@ -309,7 +344,7 @@ Default behavior:
 
 - `request.auth` and `request.service_principal` contain the machine principal
 - `request.user` remains `AnonymousUser`
-- no database lookup is required
+- no database lookup is required unless client activity tracking is enabled
 
 This is the preferred long-term design.
 

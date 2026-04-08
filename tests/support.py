@@ -25,6 +25,7 @@ def build_cognito_settings(**overrides):
         "USER_MAPPING_CALLABLE": None,
         "USER_MAPPING_CLASS": None,
         "RETURN_USER_PROXY": False,
+        "TRACK_CLIENT_ACTIVITY": False,
         "FAIL_ON_INVALID_BEARER": True,
         "JSON_ERROR_RESPONSES": True,
     }

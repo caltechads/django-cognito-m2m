@@ -6,6 +6,9 @@ dist/
 wheels/
 *.egg-info
 
+# Coverage reports
+reports
+
 # Virtual environments
 .venv
 
@@ -14,3 +17,6 @@ wheels/
 
 # Demo project
 demo/db.sqlite3
+
+# IDEs
+.vscode

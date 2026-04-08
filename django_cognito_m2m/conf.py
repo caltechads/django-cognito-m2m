@@ -31,6 +31,7 @@ DEFAULTS: dict[str, Any] = {
     "USER_MAPPING_CALLABLE": None,
     "USER_MAPPING_CLASS": None,
     "RETURN_USER_PROXY": False,
+    "TRACK_CLIENT_ACTIVITY": False,
     "FAIL_ON_INVALID_BEARER": True,
     "JSON_ERROR_RESPONSES": True,
 }
@@ -72,6 +73,8 @@ class CognitoM2MSettings:
             )
         if not isinstance(values["VALIDATOR_KWARGS"], dict):
             raise ConfigurationError("COGNITO_M2M['VALIDATOR_KWARGS'] must be a dictionary.")
+        if not isinstance(values["TRACK_CLIENT_ACTIVITY"], bool):
+            raise ConfigurationError("COGNITO_M2M['TRACK_CLIENT_ACTIVITY'] must be a boolean.")
         if not values["HEADER_NAME"]:
             raise ConfigurationError("COGNITO_M2M['HEADER_NAME'] must not be empty.")
         if not values["HEADER_PREFIX"]:

@@ -17,9 +17,17 @@ Set these environment variables before calling the protected API with a real Cog
 export COGNITO_M2M_REGION=us-west-2
 export COGNITO_M2M_USER_POOL_ID=us-west-2_AbCdEfGhI
 export COGNITO_M2M_AUDIENCE=your-api-audience
+export COGNITO_M2M_TRACK_CLIENT_ACTIVITY=1
 ```
 
 `COGNITO_M2M_AUDIENCE` is optional. Leave it unset if your validator configuration does not require an audience check.
+`COGNITO_M2M_TRACK_CLIENT_ACTIVITY` is optional. Set it to `1` if you want the demo to record `client_id`, `first_seen_at`, and `last_seen_at` for authenticated clients.
+
+If you enable client activity tracking, make sure the project includes `"django_cognito_m2m"` in `INSTALLED_APPS` and run:
+
+```bash
+./.venv/bin/python manage.py migrate
+```
 
 ## Scope Contract
 

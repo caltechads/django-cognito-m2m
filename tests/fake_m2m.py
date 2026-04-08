@@ -25,6 +25,7 @@ class FakeValidatedToken:
 
 
 last_init_kwargs = None
+validated_tokens = []
 
 
 class FakeValidator:
@@ -35,6 +36,7 @@ class FakeValidator:
         last_init_kwargs = kwargs
 
     def validate(self, token: str):
+        validated_tokens.append(token)
         if token == "valid-token":
             return FakeValidatedToken(
                 client_id="service-client",
@@ -100,6 +102,7 @@ class AlternateValidator:
         last_init_kwargs = kwargs
 
     def validate(self, token: str):
+        validated_tokens.append(token)
         return FakeValidatedToken(
             client_id="alternate-client",
             scopes=frozenset({"alt/read"}),
