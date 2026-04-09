@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from django_cognito_m2m.conf import CognitoM2MSettings, cognito_m2m_settings
@@ -10,6 +11,8 @@ from django_cognito_m2m.principal import ServicePrincipal
 from django_cognito_m2m.tracker import track_service_client_activity
 from django_cognito_m2m.utils import get_service_principal
 from django_cognito_m2m.validator_adapter import ValidatorAdapter
+
+logger = logging.getLogger(__name__)
 
 
 class CognitoRequestAuthenticator:
@@ -22,7 +25,9 @@ class CognitoRequestAuthenticator:
         validator_adapter: ValidatorAdapter | None = None,
     ) -> None:
         self.settings = settings_obj or cognito_m2m_settings
-        self.validator_adapter = validator_adapter or ValidatorAdapter(settings_obj=self.settings)
+        self.validator_adapter = validator_adapter or ValidatorAdapter(
+            settings_obj=self.settings
+        )
 
     def get_authorization_value(self, request: Any) -> str | None:
         """Return the raw configured authorization header value."""
@@ -64,5 +69,11 @@ class CognitoRequestAuthenticator:
         if token is None:
             return None
         principal = self.authenticate_token(token)
+        logger.info(
+            "token.authenticated, client_id=%s, scopes=%s",
+            principal.client_id,
+            list(principal.scopes),
+        )
+
         track_service_client_activity(principal, settings_obj=self.settings)
         return principal

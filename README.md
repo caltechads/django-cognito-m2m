@@ -68,7 +68,7 @@ python manage.py migrate
 ## Supported Stack
 
 - Python 3.10+
-- Django 4.2 through 5.x
+- Django 4.2 through 6.x
 - Django REST Framework 3.15+ when using the `drf` extra
 
 ## Configuration
