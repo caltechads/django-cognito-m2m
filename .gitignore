@@ -8,6 +8,7 @@ wheels/
 
 # Coverage reports
 reports
+.coverage
 
 # Virtual environments
 .venv
